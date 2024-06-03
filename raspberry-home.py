@@ -8,8 +8,11 @@ from google.cloud import speech, texttospeech
 import sounddevice as sd
 import wavio
 from pydub import AudioSegment
+from openai import OpenAI
+from pynput import keyboard
 
 OPENAI_API_KEY=""
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 def record_and_save(duration=3, filename= "output.wav"):
     print("Recording in progress...")
@@ -102,6 +105,20 @@ def text_to_speech(text):
 
     return 
 
+def ask_openai(text):
+
+    completion = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."},
+        {"role": "user", "content": text}
+    ]
+    )
+
+    print(completion.choices[0].message)
+
+    return completion.choices[0].message
+
 def convert_to_mono(input_file, output_file):
     # Load the audio file
     audio = AudioSegment.from_wav(input_file)
@@ -112,10 +129,41 @@ def convert_to_mono(input_file, output_file):
     # Export the mono audio
     mono_audio.export(output_file, format="wav")
 
+def main():
+    # Record and save audio
+    record_and_save(duration=3, filename="output.wav")
+    
+    # Convert to mono
+    convert_to_mono("output.wav", "output_mono.wav")
+    
+    # Transcribe speech to text
+    transcribed_text = speech_to_text("output_mono.wav")
+
+    # Get response from openai 
+    #response_text = ask_openai(transcribed_text)
+    
+    # Convert text back to speech
+    #text_to_speech(response_text)
+    text_to_speech(transcribed_text)
+
+def on_press(key):
+    try:
+        if key.char == 'r':
+            main()
+        elif key.char == 'x':
+            print("Exiting the program.")
+            sys.exit()
+    except AttributeError:
+        pass
+
+def start_listener():
+    with keyboard.Listener(on_press=on_press) as listener:
+        listener.join()
+
 if __name__ == "__main__":
-    record_and_save(duration=3, filename= "output.wav")
-    convert_to_mono("output.wav", "output.wav")
-    text = speech_to_text("output.wav")
-    text_to_speech(text)
+    print("Listening to events...")
+    start_listener()
+    
+
 
 
