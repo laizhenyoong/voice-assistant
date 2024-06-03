@@ -161,14 +161,14 @@ def start_listener():
         listener.join()
 
 if __name__ == "__main__":
-    # print("="*40)
-    # print("      Welcome to Raspberry Pi Home!      ")
-    # print("="*40)
-    # print("Press 'r' to ask a question")
-    # print("Press 'x' to exit the program")
-    # print("="*40)
-    # start_listener()
-    main()
+    print("="*40)
+    print("      Welcome to Raspberry Pi Home!      ")
+    print("="*40)
+    print("Press 'r' to ask a question")
+    print("Press 'x' to exit the program")
+    print("="*40)
+    start_listener()
+    # main()
     
 
 
