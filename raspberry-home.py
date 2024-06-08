@@ -10,6 +10,7 @@ import wavio
 from pydub import AudioSegment
 from openai import OpenAI
 from pynput import keyboard
+import pygame
 
 OPENAI_API_KEY=""
 client = OpenAI(api_key=OPENAI_API_KEY)
@@ -28,6 +29,16 @@ def record_and_save(duration=3, filename= "output.wav"):
     wavio.write(filename, recording, fs, sampwidth=2)
 
     print(f"Audio recorded and saved as {filename}")
+
+def convert_to_mono(input_file, output_file):
+    # Load the audio file
+    audio = AudioSegment.from_wav(input_file)
+    
+    # Convert to mono
+    mono_audio = audio.set_channels(1)
+    
+    # Export the mono audio
+    mono_audio.export(output_file, format="wav")
 
 def speech_to_text(audio_file_path):
     """
@@ -119,15 +130,13 @@ def ask_openai(text):
 
     return completion.choices[0].message
 
-def convert_to_mono(input_file, output_file):
-    # Load the audio file
-    audio = AudioSegment.from_wav(input_file)
-    
-    # Convert to mono
-    mono_audio = audio.set_channels(1)
-    
-    # Export the mono audio
-    mono_audio.export(output_file, format="wav")
+def play_audio(file_path):
+    pygame.init()
+    pygame.mixer.init()
+    pygame.mixer.music.load(file_path)
+    pygame.mixer.music.play()
+    while pygame.mixer.music.get_busy():
+        pygame.time.Clock().tick(10)
 
 def main():
     # Record and save audio
@@ -145,6 +154,9 @@ def main():
     # Convert text back to speech
     #text_to_speech(response_text)
     text_to_speech(transcribed_text)
+
+    # Output response as audio 
+    play_audio("result.wav")
 
 def on_press(key):
     try:
@@ -169,6 +181,7 @@ def start_listener():
             print("Invalid choice. Please enter 'r' to ask a question or 'x' to exit.")
 
 if __name__ == "__main__":
+    play_audio("result.wav")
     print("="*40)
     print("      Welcome to Raspberry Pi Home!      ")
     print("="*40)
