@@ -157,18 +157,26 @@ def on_press(key):
         pass
 
 def start_listener():
-    with keyboard.Listener(on_press=on_press) as listener:
-        listener.join()
+    while True:
+        user_input = input("Enter your choice: ").strip().lower()
+
+        if user_input == 'r':
+            main()
+        elif user_input == 'x':
+            print("Exiting the program...")
+            break
+        else:
+            print("Invalid choice. Please enter 'r' to ask a question or 'x' to exit.")
 
 if __name__ == "__main__":
-    # print("="*40)
-    # print("      Welcome to Raspberry Pi Home!      ")
-    # print("="*40)
-    # print("Press 'r' to ask a question")
-    # print("Press 'x' to exit the program")
-    # print("="*40)
-    # start_listener()
-    main()
+    print("="*40)
+    print("      Welcome to Raspberry Pi Home!      ")
+    print("="*40)
+    print("Press 'r' to ask a question")
+    print("Press 'x' to exit the program")
+    print("="*40)
+
+    start_listener()
     
 
 
