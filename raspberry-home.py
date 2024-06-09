@@ -1,6 +1,7 @@
 # sudo apt-get install portaudio19-dev
 # gcloud auth application-default login
 # gcloud auth application-default set-quota-project tidy-tine-423303-s1
+# celcomdigi-ai-cendol
 
 # Import dependencies
 import os, io, sys, asyncio, argparse
@@ -8,12 +9,9 @@ from google.cloud import speech, texttospeech
 import sounddevice as sd
 import wavio
 from pydub import AudioSegment
-from openai import OpenAI
-from pynput import keyboard
 import pygame
-
-OPENAI_API_KEY=""
-client = OpenAI(api_key=OPENAI_API_KEY)
+import vertexai
+from vertexai.generative_models import GenerativeModel
 
 def record_and_save(duration=3, filename= "output.wav"):
     print("Recording in progress...")
@@ -116,19 +114,9 @@ def text_to_speech(text):
 
     return 
 
-def ask_openai(text):
+def ask_question(text):
 
-    completion = client.chat.completions.create(
-    model="gpt-3.5-turbo",
-    messages=[
-        {"role": "system", "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."},
-        {"role": "user", "content": text}
-    ]
-    )
-
-    print(completion.choices[0].message)
-
-    return completion.choices[0].message
+    return 
 
 def play_audio(file_path):
     pygame.init()
@@ -148,8 +136,8 @@ def main():
     # Transcribe speech to text
     transcribed_text = speech_to_text("output_mono.wav")
 
-    # Get response from openai 
-    #response_text = ask_openai(transcribed_text)
+    # Get response from LLM API 
+    #response_text = ask_question(transcribed_text)
     
     # Convert text back to speech
     #text_to_speech(response_text)

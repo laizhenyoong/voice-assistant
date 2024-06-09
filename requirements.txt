@@ -7,5 +7,5 @@ google-cloud-texttospeech
 sounddevice
 wavio
 pydub
-pynput
-openai
+pygame
+google-cloud-aiplatform>=1.38
