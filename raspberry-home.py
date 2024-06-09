@@ -1,7 +1,7 @@
 # sudo apt-get install portaudio19-dev
 # gcloud auth application-default login
 # gcloud auth application-default set-quota-project tidy-tine-423303-s1
-# celcomdigi-ai-cendol
+# gcloud auth application-default set-quota-project celcomdigi-ai-cendol
 
 # Import dependencies
 import os, io, sys, asyncio, argparse
