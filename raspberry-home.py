@@ -1,6 +1,5 @@
 # sudo apt-get install portaudio19-dev
 # gcloud auth application-default login
-# gcloud auth application-default set-quota-project tidy-tine-423303-s1
 # gcloud auth application-default set-quota-project celcomdigi-ai-cendol
 
 # Import dependencies
@@ -12,6 +11,8 @@ from pydub import AudioSegment
 import pygame
 import vertexai
 from vertexai.generative_models import GenerativeModel
+
+project_id = "celcomdigi-ai-cendol"
 
 def record_and_save(duration=3, filename= "output.wav"):
     print("Recording in progress...")
@@ -115,8 +116,17 @@ def text_to_speech(text):
     return 
 
 def ask_question(text):
+    vertexai.init(project=project_id, location="us-central1")
 
-    return 
+    model = GenerativeModel(model_name="gemini-1.5-flash-001")
+
+    response = model.generate_content(
+        "You are a voice assistant, respond with a concise sentence." + text
+    )
+
+    print(response.text)
+
+    return response.text
 
 def play_audio(file_path):
     pygame.init()
@@ -137,11 +147,10 @@ def main():
     transcribed_text = speech_to_text("output_mono.wav")
 
     # Get response from LLM API 
-    #response_text = ask_question(transcribed_text)
+    response_text = ask_question(transcribed_text)
     
     # Convert text back to speech
-    #text_to_speech(response_text)
-    text_to_speech(transcribed_text)
+    text_to_speech(response_text)
 
     # Output response as audio 
     play_audio("result.wav")
@@ -169,7 +178,6 @@ def start_listener():
             print("Invalid choice. Please enter 'r' to ask a question or 'x' to exit.")
 
 if __name__ == "__main__":
-    play_audio("result.wav")
     print("="*40)
     print("      Welcome to Raspberry Pi Home!      ")
     print("="*40)
